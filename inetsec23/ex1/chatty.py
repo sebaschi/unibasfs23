@@ -53,7 +53,7 @@ def start_client(ip, port):
         client_socket.sendall(message.encode('utf-8'))
 
     # Close the connection and the client socket
-    client_socket.close()
+    client_socket.elose()
 
 def receive_messages(connection):
     while True:
@@ -70,5 +70,5 @@ elif len(sys.argv) == 2:
 else:
     ip = sys.argv[1]
     port = int(sys.argv[2])
-    start_client(ip, port)
+     start_client(ip, port)
 
