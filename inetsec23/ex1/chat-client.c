@@ -18,7 +18,7 @@ void *send_msg (void *);
 int client (char *, char *);
 struct thread_args {
     int sock;
-    unsigned short port;
+    int port;
 };
 int main (int argc, char **argv){
     // NEW SOCKET DESCRIPTOR
@@ -82,15 +82,29 @@ int server (char *port, char s)
    
 
     struct thread_args in = { .sock = cltSock, .port=peerPort};
-    //Create receive msg thread
+    //Create receiver thread
     pthread_t recv_thread;
-    pthread_create(&recv_thread, NULL, recv_msg, &in);
-    //Create send thread;
-    pthread_t send_thread;
-    pthread_create(&send_thread, NULL, send_msg, &in);
+    if (pthread_create(&recv_thread, NULL, recv_msg, &in) != 0) {
+        perror("pthread_create(RECV) error");
+        exit(1);
+    }
 
-    pthread_join(send_thread,NULL);
-    pthread_join(recv_thread, NULL);
+    //Create sender thread
+    pthread_t send_thread;
+    if (pthread_create(&send_thread, NULL, send_msg, &in) != 0) {
+        perror("pthread_create(SENDER) error");
+        exit(1);
+    }
+
+    //join
+    if(pthread_join(recv_thread,NULL) != 0){
+        perror("pthread_join(RECV) error");
+        exit(3);
+    }
+    if (pthread_join(send_thread,NULL) != 0){
+        perror("pthread_join(SEND) error");
+        exit(3);
+    }
 
     close(cltSock);
     close(servSock);
@@ -130,14 +144,27 @@ int client(char *ip, char *port){
     struct thread_args in = {.sock = localSock, .port=atoi(port)};
     //Create receiver thread
     pthread_t recv_thread;
-    pthread_create(&recv_thread, NULL, recv_msg, &in);
+    if (pthread_create(&recv_thread, NULL, recv_msg, &in) != 0) {
+        perror("pthread_create(RECV) error");
+        exit(1);
+    }
+
     //Create sender thread
     pthread_t send_thread;
-    pthread_create(&send_thread, NULL, send_msg, &in);
+    if (pthread_create(&send_thread, NULL, send_msg, &in) != 0) {
+        perror("pthread_create(SENDER) error");
+        exit(1);
+    }
 
     //join
-    pthread_join(recv_thread,NULL);
-    pthread_join(send_thread,NULL);
+    if(pthread_join(recv_thread,NULL) != 0){
+        perror("pthread_join(RECV) error");
+        exit(3);
+    }
+    if (pthread_join(send_thread,NULL) != 0){
+        perror("pthread_join(SEND) error");
+        exit(3);
+    }
 
     close(localSock);
     return 0;
@@ -154,15 +181,17 @@ void *recv_msg (void *args_void)
     char *buf = malloc(sizeof(char) * BUFSIZE);
     int bytesRecv;
     int cltSock = args->sock;
-    unsigned short port = args->port;
+    int port = args->port;
     memset(buf,0,BUFSIZE);
     do
     {
+        
+        memset(buf,0,BUFSIZE);
         bytesRecv = recv (cltSock,buf, BUFSIZE, 0);
-
+        if (bytesRecv == 0){pthread_exit(NULL);}
         char msgRecv[bytesRecv];
-        strncpy (msgRecv, buf, bytesRecv);
-        printf ("%u> %s\n", port, msgRecv);
+        strncpy (msgRecv, buf, bytesRecv+1);
+        printf ("%d> %s", port, msgRecv);
         memset(buf,0,BUFSIZE);
     }
     while (bytesRecv != -1);
@@ -173,6 +202,7 @@ void *recv_msg (void *args_void)
 //Send Message function
 void *send_msg (void *args_void)
 {
+    sleep(1);
     struct thread_args *args = args_void;
     char *buf = malloc(sizeof(char) * BUFSIZE);
     int ret;
