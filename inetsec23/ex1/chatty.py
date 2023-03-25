@@ -70,8 +70,5 @@ elif len(sys.argv) == 2:
 else:
     ip = sys.argv[1]
     port = int(sys.argv[2])
-    if len(sys.argv) == 3:
-        start_client(ip, port)
-    else:
-        start_client(ip, port)
+    start_client(ip, port)
 
