@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
-int get_frequency(int * in, int size, int target){
+int get_frequency(const int * input, int length, int target){
 	int i;
 	int counter = 0;
 	//Loop over input and count occurences of target
