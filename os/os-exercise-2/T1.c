@@ -20,7 +20,44 @@ int main ()
 		else
 			arr[(SIZE-1)-i]=1;
 
+        void *ptr;
+        int shm_fd;
+        float mean;
+        int median;
         // TODO fork another process here
+        pid_t pid;
+        pid = fork();
+        if(pid < 0) 
+        {
+            printf("Fork failed\n");
+        }
+        else if (pid == 0) //Child process
+        {
+
+            shm_fd = shm_open("RES", O_CREATE | O_RDWR, 0777);
+            mean = 0;
+            int j;
+            for (j = 0; j < SIZE; j++) 
+            {
+                mean += arr[j];
+            }
+            mean = mean / SIZE;
+            ftruncate(shm_fd, sizeof(float));
+            ptr = mmap(0,sizeof(float), PROT_NONE, MAP_SHARE, shm_fd, 0);
+            ptr[0] = mean;
+            munmap(ptr, sizeof(float));
+            close(shm_fd);
+
+        }
+        else //Parent process
+        {
+            int status = 0;
+            wait(&status);
+            shm_fd = openshm("RES");
+            sort(&arr, SIZE); 
+            median = arr[SIZE/2];
+            print(median, shm_fd);
+        }
 	// One process should calculate the median
 	// The other process should calculate the mean
 	// One process should communicate its value to the other process
