@@ -7,6 +7,11 @@
 void swap(int *xp, int *yp);
 void sort(int arr[], int size);
 
+struct thread_data {
+    int * arr;
+    float * mean;
+};
+
 int main (){
 
         int arr[SIZE];    
@@ -15,11 +20,18 @@ int main (){
                         arr[(SIZE-1)-i]=0;
                 else
                         arr[(SIZE-1)-i]=1;
+        struct thread_data d;
+        d->arr = arr;
+        d->mean = 0;
+
 	// TODO implement you solution here
 	// TODO a new thread here
         // One thread should calculate the median
         // The other thread should calculate the mean
 	// One thread should display the result (mean, median)
+}
+
+void * mean (void * args) {
 }
 
 void swap(int *xp, int *yp)
