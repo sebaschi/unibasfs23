@@ -31,17 +31,17 @@ int main (){
         char * name = "/shmem";
         struct thread_data d = { .arr=arr, .mem_name = name};
         pthread_t mean_t;
+        //Start Thread that calculates mean
         int tid = pthread_create(&mean_t, NULL, mean, &d);
         if( tid != 0) {
             perror("pthread_create(mean_t) error\n");
             exit(1);
         }
-
+	//P_thread joins child_thread
         if(pthread_join(mean_t,NULL) != 0){
             printf("Error in mean thread!.\n");
             exit(3);
         }
-
 
         float medianres = median(arr, SIZE);
         float meanres;
