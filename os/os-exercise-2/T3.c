@@ -1,4 +1,4 @@
-#include<stdio.h>
+llca#include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h> 
 #include<pthread.h> 
@@ -17,6 +17,23 @@ struct args
 void * accumulate(void * in)
 {
 	//TODO implement accumlate
+	struct args * input = in;
+	int * arr = in -> arr;
+	int start = in -> start;
+	int end = in -> end;
+	
+	int me = pthread_self();
+	int sum = 0;
+	
+	//sum up the respective part of the array;
+	for(int i = start, i <= end; i++){
+	pthread_mutex_lock(&lock);
+	printf("Lock aquired by thread %d\n", me);
+	result += arr[i];
+	pthread_mutex_unlock(&unlock);
+	printf("Lock released by thread %d\n", me);
+	}
+	
 	return NULL;
 }
 int main ()
@@ -29,10 +46,49 @@ int main ()
 
 	pthread_t threads[NUM_THREADS-1];
 	struct args thread_args[NUM_THREADS-1];
+	
+	//Loop to populate thread arguments;
+	for(int i = 0; i < NUM_THREADS-1; i++ ){
+		thread_args[i]-> arr = arr;
+		thread_args[i]-> start = i * (SIZE/NUM_THREADS);
+		thread_args[i]-> end =  (i+1)*(SIZE/NUM_THREADS)-1;
+	}
+	
+	if(pthread_mutex_init(&lock, NULL) != 0){
+		printf("\n mutex init has failed :( \n");
+		return -1;
+	}
+	
 	// TODO create a team of thread, each thread must take SIZE/NUM_THREADS to accumulate
-	// TODO use struct args to pass arguments to the accumulate function  
+	// TODO use struct args to pass arguments to the accumulate function
+	//Loop to create threads
+	for(int i = 0; i < NUM_THREADS-1; i++){
+		if(pthread_create(&threads[i], NULL, accumulate, &thread_args[i] != 0){
+			perror("pthread_create failed for thread %d\n ", i);
+			exit(1); 
+		}
+	}  
 	// TODO main thread must participate in the calculation
+	
+	int start = ((NUM_THREADS-1)*SIZE)/NUM_THREADS);
+	int end = SIZE;
+	
+	for(int i = start; i < end; i++){
+		pthread_mutex_lock(&lock);
+		printf("Lock aquired by main thread \n");
+		result += arr[i];
+		pthread_mutex_unlock(&unlock);
+		printf("Lock released by main thread \n");
+	}
 	// TODO make sure all threads finised
+	for(int i = 0; i < NUM_THREADS; i++){
+		if(pthread_join([i], NULL) != 0){
+			perror("pthread_join failed for thread %d\n ", i);
+			exit(1); 
+		}
+	}
+	pthread_mutex_destroy(&lock);
+
 	printf("sum  is %d\n", result);
 }
 
