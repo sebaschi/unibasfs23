@@ -1,4 +1,4 @@
-llca#include<stdio.h>
+#include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h> 
 #include<pthread.h> 
@@ -26,11 +26,11 @@ void * accumulate(void * in)
 	int sum = 0;
 	
 	//sum up the respective part of the array;
-	for(int i = start, i <= end; i++){
+	for(int i = start; i <= end; i++){
 	pthread_mutex_lock(&lock);
 	printf("Lock aquired by thread %d\n", me);
 	result += arr[i];
-	pthread_mutex_unlock(&unlock);
+	pthread_mutex_unlock(&lock);
 	printf("Lock released by thread %d\n", me);
 	}
 	
@@ -49,9 +49,9 @@ int main ()
 	
 	//Loop to populate thread arguments;
 	for(int i = 0; i < NUM_THREADS-1; i++ ){
-		thread_args[i]-> arr = arr;
-		thread_args[i]-> start = i * (SIZE/NUM_THREADS);
-		thread_args[i]-> end =  (i+1)*(SIZE/NUM_THREADS)-1;
+		thread_args[i] -> arr = arr;
+		thread_args[i] -> start = i * (SIZE/NUM_THREADS);
+		thread_args[i] -> end =  (i+1)*(SIZE/NUM_THREADS)-1;
 	}
 	
 	if(pthread_mutex_init(&lock, NULL) != 0){
@@ -63,27 +63,27 @@ int main ()
 	// TODO use struct args to pass arguments to the accumulate function
 	//Loop to create threads
 	for(int i = 0; i < NUM_THREADS-1; i++){
-		if(pthread_create(&threads[i], NULL, accumulate, &thread_args[i] != 0){
-			perror("pthread_create failed for thread %d\n ", i);
+		if(pthread_create(&threads[i], NULL, accumulate, &thread_args[i]) != 0){
+			perror("pthread_create failed\n");
 			exit(1); 
 		}
 	}  
 	// TODO main thread must participate in the calculation
 	
-	int start = ((NUM_THREADS-1)*SIZE)/NUM_THREADS);
+	int start = ((NUM_THREADS-1)*SIZE)/NUM_THREADS;
 	int end = SIZE;
 	
 	for(int i = start; i < end; i++){
 		pthread_mutex_lock(&lock);
 		printf("Lock aquired by main thread \n");
 		result += arr[i];
-		pthread_mutex_unlock(&unlock);
+		pthread_mutex_unlock(&lock);
 		printf("Lock released by main thread \n");
 	}
 	// TODO make sure all threads finised
 	for(int i = 0; i < NUM_THREADS; i++){
-		if(pthread_join([i], NULL) != 0){
-			perror("pthread_join failed for thread %d\n ", i);
+		if(pthread_join(threads[i], NULL) != 0){
+			perror("pthread_join failed");
 			exit(1); 
 		}
 	}
