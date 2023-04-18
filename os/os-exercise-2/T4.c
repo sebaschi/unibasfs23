@@ -15,6 +15,10 @@ void display(struct process *);
 void display_average_waiting_time(struct process *);
 void schedule_FCFS(struct process *);
 
+int cmpr (const void * a, const void * b){
+    return ((struct process*)a)->arrival_time - ((struct process *)b)->arrival_time;
+}
+
 int main()
 {
 	struct process processes[SIZE];	
@@ -52,12 +56,21 @@ void display(struct process * input){
 
 void schedule_FCFS(struct process * arr)
 {
-	//TODO
-	printf("Not implemented Yet!\n");
+	qsort(arr, SIZE, sizeof(struct process), cmpr);
+        int i;
+        int diff;
+        int arrival;
+        arr[0].start_time = 0;
+        for (i = 1; i < SIZE; i++) {
+           diff = arr[i-1].start_time + arr[i-1].execution_time + 1;
+           arrival = arr[i].arrival_time;
+           arr[i].start_time = diff>arrival?diff:arrival;
+        }
+	printf("Implemented!\n");
 }
 void schedule_SJF(struct process * arr)
 {
-        //TODO
+
         printf("Not implemented Yet!\n");
 }
 void schedule_LJF(struct process * arr)
@@ -68,5 +81,13 @@ void schedule_LJF(struct process * arr)
 void display_average_waiting_time(struct process * arr)
 {
 	//TODO
-	printf("Not implemented Yet!\n");
+        int total = 0;
+        int i;
+        for (i = 0; i < SIZE; i++) {
+               total += arr[i].start_time - arr[i].arrival_time;
+               printf("Current total: %d. Start: %d. Arrival %d\n", total, arr[i].start_time, arr[i].arrival_time);
+        }
+        float avrg;
+        avrg = (float)total/(float)SIZE;
+	printf("Average waiting time: %.3f\n",avrg);
 }
