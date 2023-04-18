@@ -6,6 +6,7 @@
 #include <fcntl.h>
 
 
+
 #define SIZE 10000
 
 void swap(int *xp, int *yp);
@@ -31,17 +32,17 @@ int main (){
         char * name = "/shmem";
         struct thread_data d = { .arr=arr, .mem_name = name};
         pthread_t mean_t;
+        //Start Thread that calculates mean
         int tid = pthread_create(&mean_t, NULL, mean, &d);
         if( tid != 0) {
             perror("pthread_create(mean_t) error\n");
             exit(1);
         }
-
+	//P_thread joins child_thread
         if(pthread_join(mean_t,NULL) != 0){
             printf("Error in mean thread!.\n");
             exit(3);
         }
-
 
         float medianres = median(arr, SIZE);
         float meanres;
@@ -51,8 +52,8 @@ int main (){
 
         
 
-        //Print to  user tty
-        printf("Main Thread TID: %d. Median: %f. Called Thread TID  %d. Mean: %f\n", pthread_self(), medianres, mean_t, meanres);
+        //Print to  user tty. Note, TID's have no meaning besides quality checking.
+        printf("Main Thread TID: %ld. Median: %f. Called Thread TID  %ld. Mean: %f\n", pthread_self(), medianres, mean_t, meanres);
         //unmap virtual address
         munmap(shres, sizeof(float));
         //unlink file used for shared memory access
