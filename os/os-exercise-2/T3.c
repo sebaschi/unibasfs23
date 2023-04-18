@@ -18,9 +18,9 @@ void * accumulate(void * in)
 {
 	//TODO implement accumlate
 	struct args * input = in;
-	int * arr = in -> arr;
-	int start = in -> start;
-	int end = in -> end;
+	int * arr = input -> arr;
+	int start = input -> start;
+	int end = input -> end;
 	
 	int me = pthread_self();
 	int sum = 0;
@@ -31,7 +31,7 @@ void * accumulate(void * in)
 	printf("Lock aquired by thread %d\n", me);
 	result += arr[i];
 	pthread_mutex_unlock(&lock);
-	printf("Lock released by thread %d\n", me);
+	printf("Lock released by thread %d, loop: %i\n", me, i);
 	}
 	
 	return NULL;
@@ -49,9 +49,9 @@ int main ()
 	
 	//Loop to populate thread arguments;
 	for(int i = 0; i < NUM_THREADS-1; i++ ){
-		thread_args[i] -> arr = arr;
-		thread_args[i] -> start = i * (SIZE/NUM_THREADS);
-		thread_args[i] -> end =  (i+1)*(SIZE/NUM_THREADS)-1;
+		thread_args[i].arr = arr;
+		thread_args[i].start = i * (SIZE/NUM_THREADS);
+		thread_args[i].end =  (i+1)*(SIZE/NUM_THREADS)-1;
 	}
 	
 	if(pthread_mutex_init(&lock, NULL) != 0){
@@ -81,7 +81,7 @@ int main ()
 		printf("Lock released by main thread \n");
 	}
 	// TODO make sure all threads finised
-	for(int i = 0; i < NUM_THREADS; i++){
+	for(int i = 0; i < NUM_THREADS-1; i++){
 		if(pthread_join(threads[i], NULL) != 0){
 			perror("pthread_join failed");
 			exit(1); 
