@@ -24,6 +24,14 @@ int main (){
         d->arr = arr;
         d->mean = 0;
 
+        pthread_t mean_t;
+        if(pthread_create(&mean_t, NULL, mean, &d) != 0) {
+            perror("pthread_create(mean_t) error\n");
+            exit(1);
+        }
+
+
+
 	// TODO implement you solution here
 	// TODO a new thread here
         // One thread should calculate the median

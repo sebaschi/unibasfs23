@@ -1,0 +1,21 @@
+# UDP Chat
+## Usage
+Server:
+> python3 udp_chat_server.py port
+
+Client:
+> python3 udp_chat_client.py serverIp serverPort username
+
+After the server and the client are successfully connected, clients can use various commands to connect to other clients.
+
+## Available Client Commands
+- /users: Lists all connected clients
+- /connectTo peerName: Initiates a connection to the specified user(peerName)
+- /end: Closes all connections and terminates the application
+
+## Example Usage
+Server:
+> python3 udp_chat_server.py 9000
+
+Client:
+> python3 udp_chat_client.py 127.0.0.1 9000 user1

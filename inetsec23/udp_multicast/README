@@ -1,0 +1,21 @@
+# UDP Multicast Chat
+## Usage
+Server:
+> python3 udp_multicast_chat_server.py port
+
+Client:
+> python3 udp_multicast_chat_client.py serverIp serverPort username
+
+After the server and the client are successfully connected, clients can use different commands to connect to an available chat rooms.
+
+## Available Client Commands
+- /rooms: Lists all available chat rooms.
+- /join roomName: Initiates a connection to the specified chat room (roomName).
+- /end: Closes all connections and terminates the application.
+
+## Example Usage
+Server:
+> python3 udp_multicast_chat_server.py 9000
+
+Client:
+> python3 udp_multicast_chat_client.py 127.0.0.1 9000 user1

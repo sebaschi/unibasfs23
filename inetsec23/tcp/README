@@ -1,0 +1,16 @@
+# TCP Chat
+## Usage
+Server:
+> python3 tcp_chat.py port
+
+Client:
+> python3 tcp_chat.py serverIp serverPort
+
+After the server and the client are successfully connected, they can start exchanging text messages. The command "/end" closes the connection and exits the application.
+
+## Example Usage
+Server:
+> python3 tcp_chat.py 9000
+
+Client:
+> python3 tcp_chat.py 127.0.0.1 9000
