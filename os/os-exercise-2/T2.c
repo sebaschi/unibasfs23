@@ -6,6 +6,7 @@
 #include <fcntl.h>
 
 
+
 #define SIZE 10000
 
 void swap(int *xp, int *yp);
@@ -51,7 +52,7 @@ int main (){
 
         
 
-        //Print to  user tty
+        //Print to  user tty. Note, TID's have no meaning besides quality checking.
         printf("Main Thread TID: %ld. Median: %f. Called Thread TID  %ld. Mean: %f\n", pthread_self(), medianres, mean_t, meanres);
         //unmap virtual address
         munmap(shres, sizeof(float));
