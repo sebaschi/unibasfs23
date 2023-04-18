@@ -1,0 +1,10 @@
+Concurrency is when two or more tasks can start, run and complete in overlapping time periods.
+It does not necessarely mean that they are running at the same instant.
+For example, multitasking on a single core unit
+
+Example; Concurency is like two lines of customers ordering from the same cashier.
+	 Lines take turns ordering.
+
+Parallelism is when tasks litteraly run at the same time. 
+
+Example; Two lines of customers ordering from two different cashiers.
