@@ -52,7 +52,7 @@ int main (){
         
 
         //Print to  user tty
-        printf("Main Thread TID: %d. Median: %f. Called Thread TID  %d. Mean: %f\n", pthread_self(), medianres, mean_t, meanres);
+        printf("Main Thread TID: %ld. Median: %f. Called Thread TID  %ld. Mean: %f\n", pthread_self(), medianres, mean_t, meanres);
         //unmap virtual address
         munmap(shres, sizeof(float));
         //unlink file used for shared memory access
