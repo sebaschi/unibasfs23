@@ -114,7 +114,6 @@ float median(int *arr, int size)
 {
     float res; 
     sort(arr,size);
-    printf("%d%d\n", arr[size/2], arr[size/2 -1]);
     if (size % 2 != 0) {
         res = arr[size/2];
     } else {
@@ -122,5 +121,6 @@ float median(int *arr, int size)
     }
     return res;
 }
+
 
 
