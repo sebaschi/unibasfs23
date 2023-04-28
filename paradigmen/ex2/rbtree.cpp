@@ -24,9 +24,9 @@ public:
         this->value = value;
         this->color = 0; //no child to begin with
 
-        this->parent = NULL;
-        this->lchild = NULL;
-        this->rchild = NULL;
+        this->parent = nullptr;
+        this->lchild = nullptr;
+        this->rchild = nullptr;
     }
     //Getters decleration and inline implementation
     int getKey() { return key;}
@@ -35,9 +35,7 @@ public:
     //Setter declaration
     void setKey(int k);
     void setValue(string v);
-    
 
-    
 };
 
 //Node Setter Implementations
@@ -50,21 +48,23 @@ void Node::setValue(string v) {
     value = v;
 }
 
+
+
 class RBTree {
-//Private member root
+
 private:
     Node* root;
     void rebalance(Node* r);
     void rotateLeft(Node* r);
     void rotateRight(Node* r);
-    void deleteAllChildren(Node* current);
-    void inOrderTraversal(Node* current);
+    void deleteAllNodes(Node* current);
+    void traversal(Node* current, int indent);
 
 public:
     //Constructor Decl.
     RBTree();
     RBTree(int key, string value);
-    RBTree(int* keys, string* values);
+    RBTree(int* keys, string* values, int size);
     ~RBTree();
 
     //Declaration of the Methods
@@ -76,25 +76,24 @@ public:
 
 //Constructor Implementation
 RBTree::RBTree() {
-    this->root = NULL;
+    this->root = nullptr;
 }
 
 RBTree::RBTree(int key, string value) {
-    this->root = NULL;
+    this->root = nullptr;
     insert(key,value);
 }
 
-RBTree::RBTree (int* keys, string* values) {
-    this->root = NULL;
-    int n = sizeof(keys)/sizeof(int);
-    for (int i =0; i < n; i++) {
+RBTree::RBTree (int* keys, string* values, int size) {
+    this->root = nullptr;
+    for (int i =0; i < size; i++) {
         insert(keys[i],values[i]);
     }
 }
 
 //Destructor for RBTree
 RBTree::~RBTree() {
-
+    deleteAllNodes(this->root);
 }
 
 //Implement public methods
@@ -104,13 +103,10 @@ void RBTree::insert(int key, string value) {
     //Create new node;
     Node* z = new Node(key,value);
 
-    Node* y = NULL;
+    Node* y = nullptr;
     Node* x = this->root;
-    
-    while ( x != NULL) {
+    while ( x != nullptr) {
         y = x;
-        cout << z->getKey() << endl;
-        cout << x->getKey() << endl;
         if (z->getKey() < x->getKey()) {
             x = x->lchild;
         } else {
@@ -120,7 +116,7 @@ void RBTree::insert(int key, string value) {
 
     z->parent = y;
 
-    if (y == NULL) {
+    if (y == nullptr) {
         this->root = z;
     } else if (z->getKey() < y->getKey()) {
         y->lchild = z;
@@ -128,23 +124,108 @@ void RBTree::insert(int key, string value) {
         y->rchild = z;
     }
 
-    z->lchild = NULL;
-    z->rchild = NULL;
+    z->lchild = nullptr;
+    z->rchild = nullptr;
     z->color = 1;
-    //rebalance(z);
+    rebalance(z);
+}
+
+//From the same book as insert(int,string)
+void RBTree::rebalance(Node* z) {
+    while (z->parent != nullptr && z->parent->color==1) {
+        //Parent is a left child    
+        if (z->parent == z->parent->parent->lchild) {
+            Node* y = z->parent->parent->rchild;
+            if (y != nullptr && y->color == 1) {
+                z->parent->color = 0;
+                y->color = 0;
+                z->parent->parent->color = 1;
+                z = z->parent->parent;
+            } else {
+                if (z == z->parent->rchild) {
+                    z = z->parent;
+                    rotateLeft(z); 
+                }
+                z->parent->color = 0;
+                z->parent->parent->color = 1;
+                rotateRight(z->parent->parent);
+            }
+        } else if (z->parent == z->parent->parent->rchild) { //Parent is a right child. Analog but left/right switched -> book
+            Node* y = z->parent->parent->lchild;
+            if (y != nullptr && y->color == 1) {
+                z->parent->color = 0;
+                y->color = 0;
+                z->parent->parent->color = 1;
+                z = z->parent->parent;
+            } else {
+                if (z == z->parent->lchild) {
+                    z = z->parent;
+                    rotateRight(z);
+                }
+                z->parent->color = 0;
+                z->parent->parent->color = 1;
+                rotateLeft(z->parent->parent);
+            }
+        }
+    }
+    this->root->color = 0; //keep root black
+}
+
+// Again same book
+void RBTree::rotateLeft(Node* z) {
+    if (z->rchild == nullptr) {return;}
+    Node* y = z->rchild;
+    z->rchild = y->lchild;
+    
+    if (y->lchild != nullptr) {
+        y->lchild->parent = z;
+    }
+
+    y->parent = z->parent;
+
+    if (z->parent == nullptr) {
+        this->root = y;
+        this->root->parent = nullptr;
+    } else if (z == z->parent->lchild) {
+        z->parent->lchild = y;
+    } else {
+        z->parent->rchild = y;
+    }
+
+    y->lchild = z;
+    z->parent = y;
 
 }
 
-void RBTree::rebalance(Node* z) {
-    while (z->parent != NULL && z->parent->color==1) {
-        if (z->parent == z->parent->parent->lchild) {
-        }
+//Like rotateLeft(Node*) but left/right flipped
+void RBTree::rotateRight(Node* z) {
+    if (z->lchild == nullptr) { cout << "lchild null"<<endl; return;}
+    Node* y = z->lchild;
+    z->lchild = y->rchild;
+
+    if (y->rchild != nullptr) {
+        y->rchild->parent = z;
     }
+
+    y->parent = z->parent;
+
+    if (z->parent == nullptr) {
+        this->root = y;
+        this->root->parent = nullptr;
+    } else if (z == z->parent->rchild) {
+        z->parent->rchild = y;
+    } else {
+        z->parent->lchild = y;
+    }
+
+    y->rchild =z;
+    z->parent =y;
 }
 
 void RBTree::printTree() {
+    if (this-> root == nullptr) { return; };
     Node* current = this->root;
-    inOrderTraversal(current);
+    traversal(current, 0);
     cout << endl;
 }
 
@@ -153,20 +234,26 @@ void RBTree::printTree() {
 //Implement private methods
 //
 
-void RBTree::inOrderTraversal(Node* current) {
-    if (current != NULL) {
-        cout << "(";
-        inOrderTraversal(current->lchild);
-        cout << "Key: " << current->getKey() << " Value: " << current->getValue();
-        inOrderTraversal(current->rchild);
-        cout << ")";
+void RBTree::traversal(Node* current, int indent) {
+    if (current == nullptr) { return;}
+    for (int i = 0; i < indent; i++) {
+        cout << " ---- ";
     }
+    cout << current->color << ":" << current->getKey() << ":" << current->getValue() ;
+    traversal(current->lchild, indent+1);
+    cout << endl;
+    traversal(current->rchild, indent+1);
 }
 
-void RBTree::deleteAllChildren(Node* current) {
-    if (current != NULL) {
-        deleteAllChildren(current->lchild);
-        deleteAllChildren(current->rchild);
+//heler method for destructor
+void RBTree::deleteAllNodes(Node* current) {
+    //Base case
+    if (current != nullptr) {
+        //Recursively delete left subtree
+        deleteAllNodes(current->lchild);
+        //Recursively delete right suntree
+        deleteAllNodes(current->rchild);
+        //delete self;
         delete current;
     }
 }
@@ -175,7 +262,21 @@ int main() {
     int zips[14] = {1005, 9000, 1204, 6060, 5034, 8057, 8805, 2740, 3005, 4052, 3920, 4132, 6005, 3604};
     string names[14] = {"Lausanne", "St. Gallen", "Geneve", "Sarnen", "Suhr", "Zurich", "Richterswil", "Moutier",
 "Bern", "Basel", "Zermatt", "Muttenz", "Luzern", "Thun"};
-    RBTree tree(zips, names); 
+    RBTree tree(zips, names, 14); 
     tree.printTree();
+
+    //To test destructor use heap memory
+    RBTree* test= new RBTree();
+    test->insert(111, "One");
+    test->insert(222, "two");
+    test->insert(333, "three");
+    test->printTree();
+    test->insert(444,"four");
+    test->printTree();
+    test->insert(555, "five");
+    test->insert(666, "six");
+    test->printTree();
+    //To check if destructor works
+    delete test;
     return 0;
 }
