@@ -1,0 +1,28 @@
+./T1 10 5 0
+Producer produced: 497656302, buffer position: 0 
+Producer produced: 121511061, buffer position: 1 
+Producer produced: 2003751595, buffer position: 2 
+Producer produced: 1777083075, buffer position: 3 
+Producer produced: 1269673333, buffer position: 4 
+./T1 10 0 5
+./T1 10 2 2
+Producer produced: 1052735640, buffer position: 0 
+Consumer consumed: 1052735640, buffer position: 0 
+Producer produced: 2128995422, buffer position: 1 
+Consumer consumed: 2128995422, buffer position: 1 
+Producer produced: 2054246426, buffer position: 2 
+Consumer consumed: 2054246426, buffer position: 2 
+Producer produced: 1962642073, buffer position: 3 
+Producer produced: 82735487, buffer position: 4 
+Producer produced: 654274244, buffer position: 0 
+Consumer consumed: 1962642073, buffer position: 3 
+Producer produced: 1319395959, buffer position: 1 
+Consumer consumed: 82735487, buffer position: 4 
+Consumer consumed: 654274244, buffer position: 0 
+Consumer consumed: 1319395959, buffer position: 1 
+Producer produced: 711318392, buffer position: 2 
+Consumer consumed: 711318392, buffer position: 2 
+Producer produced: 1940665134, buffer position: 3 
+Producer produced: 57730829, buffer position: 4 
+Consumer consumed: 1940665134, buffer position: 3 
+Consumer consumed: 57730829, buffer position: 4 
