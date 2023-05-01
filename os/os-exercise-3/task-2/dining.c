@@ -1,6 +1,8 @@
 #include "dp.h"
+#include <stdlib.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <unistd.h>
 
 int left_neighbor(int number)
 {
@@ -26,7 +28,7 @@ void test(int i)
         state[i] = EATING;
 
         // TODO unblock threads from condition variable
-        phtread_cond_signal(&cond_vars[i]);
+        pthread_cond_signal(&cond_vars[i]);
     }
 }
 

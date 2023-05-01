@@ -1,4 +1,6 @@
 #include <pthread.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
 #include "dp.h"
 
@@ -13,7 +15,7 @@ void init()
         thread_id[i] = i;
 
         // TODO initialize condition variable
-       phtread_cond_init(&cond_vars[i], NULL);
+       pthread_cond_init(&cond_vars[i], NULL);
     }
 
     // initialize mutex lock

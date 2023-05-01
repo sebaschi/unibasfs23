@@ -1,9 +1,13 @@
 #include "dp.h"
-#include "dining.c"
+#include <unistd.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <time.h>
 
+void return_forks(int number);
+void pickup_forks(int number);
+int srandom(unsigned int seed);
+int random();
 // structure of a dining philosopher alternating between thinking and eating
 void *philosopher(void *param)
 {

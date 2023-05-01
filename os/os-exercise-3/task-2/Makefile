@@ -13,3 +13,7 @@ dining.o: dining.c dp.h
 
 philosopher.o: philosopher.c dp.h
 	gcc -lpthread -c philosopher.c -lpthread -fcommon
+
+clean: 
+	rm *.o
+	rm diningphilosophers
