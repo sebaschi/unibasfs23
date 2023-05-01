@@ -1,7 +1,8 @@
+#include "dp.h"
+#include "dining.c"
 #include <pthread.h>
 #include <stdio.h>
 #include <time.h>
-#include "dp.h"
 
 // structure of a dining philosopher alternating between thinking and eating
 void *philosopher(void *param)
