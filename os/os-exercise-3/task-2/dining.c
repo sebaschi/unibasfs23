@@ -45,6 +45,7 @@ void pickup_forks(int number)
 
         // TODO wait on condition variable and mutex
         pthread_cond_wait(&cond_vars[number], &mutex_lock);
+        printf("Philosopher %d completed waiting\n", number);
     }
 
     pthread_mutex_unlock(&mutex_lock);
@@ -53,7 +54,7 @@ void pickup_forks(int number)
 void return_forks(int number)
 {
     pthread_mutex_lock(&mutex_lock);
-
+    printf("Philosopher %d is returning forks\n", number);
     state[number] = THINKING;
     test(left_neighbor(number));
     test(right_neighbor(number));

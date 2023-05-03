@@ -18,7 +18,7 @@ void *philosopher(void *param)
 
     srandom((unsigned)time(NULL));
 
-    while (times_through_loop < 2)
+    while (times_through_loop < 2 )
     {
         printf("Philosopher %d is thinking\n", number);
         sleep((int)((random() % MAX_SLEEP_TIME) + 1));
