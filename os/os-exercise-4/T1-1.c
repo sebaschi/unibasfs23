@@ -9,7 +9,7 @@ int main ()
 	printf("enter numnber: ");
 	scanf("%d", &SIZE);
         printf("Before allocating memory, SIZE: %d \n", SIZE);    
-	int generated_numbers[SIZE];	
+	int *generated_numbers = malloc(SIZE*sizeof(int));
         /* Core Dumped allocating memory for 10^7 integers in line above*/
         printf("After allocating memory\n");
         

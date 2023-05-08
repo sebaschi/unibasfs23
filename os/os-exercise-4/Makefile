@@ -6,7 +6,7 @@ t11:
 	gcc -o t11.o T1-1.c
 
 t12:
-	gcc -o t21.o T1-2.c
+	gcc -o t12.o T1-2.c
 
 t13:
 	gcc -o t13.o T1-3.c
