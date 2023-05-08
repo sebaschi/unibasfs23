@@ -10,6 +10,8 @@ t12:
 
 t13:
 	gcc -o t13.o T1-3.c
+t13d:
+	gcc -g -o t13d.o T1-3.c -DDEBUG
 
 t2:
 	gcc -o t2.o T2.c

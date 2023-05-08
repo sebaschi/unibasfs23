@@ -31,5 +31,7 @@ int main ()
 		printf("Value (%d) has been found %d times\n", i, histogram[i]);
 	}
 
+        free(generated_numbers);
+
 
 }
