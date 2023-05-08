@@ -3,10 +3,36 @@
 
 int readLinesCount(const char * str){
     //TODO implement readlinesCount which returns the total number of lines within the input file
- return 0;
+    char current;
+    FILE* file = fopen(str, "r"); /* Open file in read-only mode */
+    if (file == NULL) {
+        printf("Could not open file %s", str);
+        exit(1);
+    }
+    int count = 0;
+    current = fgetc(file);
+    while (current != EOF) {
+        if (current == '\n') {
+            count++;
+        }
+        current =  fgetc(file);
+    }
+    fclose(file);
+    return count;
 }
 void writeLinesCount(const char * str, int count_line){
-//TODO implement writeLinesCount which writes a new line in file str has count_line 
+
+    FILE * file = fopen(str, "a+");
+    char* in;
+
+    if (file == NULL) {
+        printf("Could not open file %s.\n", str);
+    } else {
+        fprintf(file, "%d\n", count_line);
+    }
+    fclose(file);
+
+
 }
 int main(int argc, char * argv[])
 {
