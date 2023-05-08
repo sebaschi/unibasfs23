@@ -29,7 +29,9 @@ void count_sort(int  input[], int size)
 			temp[counter]--;
 		}
 		counter++;
-	}
+	}       
+        /* Memory was not freed before, which can cause memory leak */
+        free(temp);
 
 }
 
